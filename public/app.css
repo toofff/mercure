@@ -1,27 +1,9 @@
-label {
-    display: block;
-}
-
-.col {
-    float: left;
-    width: 50%;
-}
-
-main {
-    padding-top: 2em;
-}
-
-form>div {
-    padding-bottom: 1em;
-}
-
-textarea,
-input:not([type="submit"]) {
-    display: block;
-    width: 80%;
-}
-
 code,
-pre {
-    background-color: lightgray;
-}
+pre { background-color: #ced4da; }
+sup { color: #d9534f; }
+a { color: #f0ad4e; text-decoration: none; }
+a:hover { color: #f0ad4e; text-decoration: underline; }
+label { display: block; }
+textarea,
+input:not([type="submit"]) { display: block; width: 100%; }
+.block { padding: 5px 10px; }

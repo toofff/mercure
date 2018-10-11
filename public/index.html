@@ -1,161 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
+	<head>
+		<title>Mercure</title>
+		<link rel="stylesheet" href="knacss.css">
+		<link rel="stylesheet" href="app.css">
+	</head>
 
-<head>
-	<title>Mercure</title>
-	<link rel="stylesheet" href="app.css">
-</head>
+	<body>
+		<header>
+			<h1>Mercure Debugging Tools</h1>
+		</header>
 
-<body>
-	<h1>Mercure Debugging Tools</h1>
+		<div class="flex-container">
+			<section class="w50">
+				<div class="block">
+					<h2>Subscriber</h2>
 
-	<section class="col">
-		<h1>Subscriber</h1>
-		<section>
-			<h1>Discover</h1>
-
-			<form name="discover">
-				<div>
-					<label>Topic *:</label>
-					<input type="url" name="topic" required>
-
-					<small>
-						URL containing a <code>Link rel="mercure"</code> header to init the discovery.<br>
-						Demo endpoints: any subpath of <code>/demo</code>.
-					</small>
-				</div>
-				<div>
-					<label>Demo body:</label>
-					<textarea name="body"></textarea>
-
-					<small>Data to return (demo entrypoints only, default JSON-LD document when empty).</small>
-				</div>
-
-				<div>
-					<label>
-						Demo JWT:
-						<input name="jwt" autocomplete="off">
-					</label>
-					<small>
-						JWT token to set in a <code>mercureAuthorization</code> cookie (demo entrypoints only, anonymous when empty).<br>
-						Default key: <code>!UnsecureChangeMeSubscriber!</code>, add an array of targets (strings) in a claim named
-						<code>mercureTargets</code>.<br>
-						<a href="https://jwt.io" target="_blank">Create a token</a>.
-					</small>
-				</div>
-
-				<input type="submit" value="Discover" name="discover">
-			</form>
-		</section>
-
-		<section>
-			<h1>Subscribe</h1>
-			<form name="subscribe">
-				<div>
-					<label>
-						Hub URL *:
-						<input type="url" name="url" required>
-					</label>
+					<h3>Discover</h3>
+					<form name="discover">
+						<div>
+							<label>Topic<sup>*</sup>:</label>
+							<input type="url" name="topic" required>
+							<p>
+								<small>
+									URL containing a <code>Link rel="mercure"</code> header to init the discovery.<br>
+									Demo endpoints: any subpath of <code>/demo</code>.
+								</small>
+							</p>
+						</div>
+						<div>
+							<label>Demo body:</label>
+							<textarea name="body"></textarea>
+							<p>
+								<small>Data to return (demo entrypoints only, default JSON-LD document when empty).</small>
+							</p>
+						</div>
+						<div>
+							<label>Demo JWT:</label>
+							<input name="jwt" autocomplete="off">
+							<p>
+								<small>
+									JWT token to set in a <code>mercureAuthorization</code> cookie (demo entrypoints only, anonymous when empty).<br>
+									Default key: <code>!UnsecureChangeMeSubscriber!</code>, add an array of targets (strings) in a claim named
+									<code>mercureTargets</code>.<br>
+									<a href="https://jwt.io" target="_blank">Create a token</a>.
+								</small>
+							</p>
+						</div>
+						<input type="submit" value="Discover" name="discover" class="btn--primary">
+					</form>
 				</div>
 
-				<div>
-					<label>
-						Topics to get updates for *:
-						<textarea name="topics" cols="30" rows="3" required></textarea>
-					</label>
-					<small>One <a href="https://tools.ietf.org/html/rfc6570">URI template</a> per line.</small>
+				<div class="block">
+					<h3>Subscribe</h3>
+					<form name="subscribe">
+						<div>
+							<label>Hub URL<sup>*</sup>:</label>
+							<input type="url" name="url" required>
+						</div>
+						<div>
+							<label>Topics to get updates for<sup>*</sup>:</label>
+							<textarea name="topics" rows="3" required></textarea>
+							<p>
+								<small>One <a href="https://tools.ietf.org/html/rfc6570" target="_blank">URI template</a> per line.</small>
+							</p>
+						</div>
+						<div>
+							<label>
+								Last Event ID:
+								<input name="lastEventId">
+							</label>
+						</div>
+						<input type="submit" value="Subscribe" name="subscribe" class="btn--primary">
+						<button name="unsubscribe" disabled class="btn">Unsubscribe</button>
+					</form>
+
+					<main id="updates">No updates pushed yet.</main>
+
+					<template id="update">
+						<li>
+							<article>
+								<h1></h1>
+								<pre></pre>
+							</article>
+						</li>
+					</template>
 				</div>
+			</section>
 
-				<div>
-					<label>
-						Last Event ID:
-						<input name="lastEventId">
-					</label>
+			<section class="w50">
+				<div class="block">
+					<h2>Publisher</h2>
+
+					<form name="publish" action="/publish" method="POST">
+						<div>
+							<label>Publisher JWT<sup>*</sup>:</label>
+							<input name="jwt" autocomplete="off" value="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.HB0k08BaV8KlLZ3EafCRlTDGbkd9qdznCzJQ_l8ELTU" required>
+							<p>
+								<small>
+									Default key: <code>!UnsecureChangeMePublisher!</code>.<br>
+									<a href="https://jwt.io" target="_blank">Create a new token</a>.
+								</small>
+							</p>
+						</div>
+						<div>
+							<label>Topics<sup>*</sup>:</label>
+							<textarea name="topics" required></textarea>
+							<p>
+								<small>First line: canonical <a href="https://tools.ietf.org/html/rfc4622" target="_blank">IRI</a>. Next lines: alternate IRIs.</small>
+							</p>
+						</div>
+						<div>
+							<label>Data<sup>*</sup>:</label>
+							<textarea name="data" rows="5" required></textarea>
+						</div>
+						<div>
+							<label>Targets:</label>
+							<textarea name="targets"></textarea>
+							<p>
+								<small>One string per line.</small>
+							</p>
+						</div>
+						<div>
+							<label>Event ID:</label>
+							<input name="id">
+						</div>
+						<div>
+							<label>Event Type:</label>
+							<input name="type">
+						</div>
+						<div>
+							<label>Event Retry:</label>
+							<input name="retry">
+						</div>
+						<input type="submit" value="Publish" class="btn--primary">
+					</form>
 				</div>
+			</section>
+		</div>
 
-				<input type="submit" value="Subscribe" name="subscribe">
-				<button name="unsubscribe" disabled>Unsubscribe</button>
-			</form>
-
-			<main id="updates">No updates pushed yet.</main>
-
-			<template id="update">
-				<li>
-					<article>
-						<h1></h1>
-						<pre></pre>
-					</article>
-				</li>
-			</template>
-		</section>
-	</section>
-
-	<section class="col">
-		<h1>Publisher</h1>
-
-		<form name="publish" action="/publish" method="POST">
-			<div>
-				<label>
-					Publisher JWT *:
-					<input name="jwt" autocomplete="off" value="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.HB0k08BaV8KlLZ3EafCRlTDGbkd9qdznCzJQ_l8ELTU"
-					 required>
-				</label>
-				<small>
-					Default key: <code>!UnsecureChangeMePublisher!</code>.<br>
-					<a href="https://jwt.io" target="_blank">Create a new token</a>.
-				</small>
-			</div>
-
-			<div>
-				<label>
-					Topics *:
-					<textarea name="topics" required></textarea>
-				</label>
-				<small>First line: canonical <a href="https://tools.ietf.org/html/rfc4622">IRI</a>. Next lines: alternate IRIs.</small>
-			</div>
-
-			<div>
-				<label>
-					Data *:
-					<textarea name="data" cols="30" rows="5" required></textarea>
-				</label>
-			</div>
-
-			<div>
-				<label>
-					Targets:
-					<textarea name="targets"></textarea>
-
-					<small>One string per line.</small>
-				</label>
-			</div>
-
-			<div>
-				<label>
-					Event ID:
-					<input name="id">
-				</label>
-			</div>
-
-			<div>
-				<label>
-					Event Type:
-					<input name="type">
-				</label>
-			</div>
-
-			<div>
-				<label>
-					Event Retry:
-					<input name="retry">
-				</label>
-			</div>
-
-			<input type="submit" value="Publish">
-		</form>
-	</section>
-
-	<script src="app.js"></script>
-</body>
-
+		<script src="app.js"></script>
+	</body>
 </html>
