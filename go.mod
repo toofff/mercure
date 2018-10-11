@@ -5,10 +5,10 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gorilla/handlers v1.4.0
 	github.com/joho/godotenv v1.3.0
-	github.com/joonix/log v0.0.0-20180502111528-d2d3f2f4a806 // indirect
+	github.com/joonix/log v0.0.0-20180502111528-d2d3f2f4a806
 	github.com/pmezard/go-difflib v1.0.0
 	github.com/satori/go.uuid v1.2.1-0.20180103174451-36e9d2ebbde5
-	github.com/sirupsen/logrus v1.0.6 // indirect
+	github.com/sirupsen/logrus v1.0.6
 	github.com/stretchr/objx v0.1.1
 	github.com/stretchr/testify v1.2.2
 	github.com/unrolled/secure v0.0.0-20180914162101-439d7b25425f
